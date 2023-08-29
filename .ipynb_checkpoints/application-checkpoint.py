@@ -1,44 +1,20 @@
+from flask import Flask, render_template, request
 import pickle
-import numpy as np
 import pandas as pd
+import os
 
-# Functions -------------------------------------------------------------
+popular_df = pickle.load(open('output/popular.pkl','rb'))
+model_best = pickle.load(open('output/model_best.pkl','rb'))
+book_copy = pickle.load(open('output/books.pkl','rb'))
+rating_data = pickle.load(open('output/rating.pkl','rb'))
+books_with_genres = pickle.load(open('output/books_with_genres.pkl','rb'))
+predicted_books = pickle.load(open('predicted_books.pkl','rb'))
 
-def load_data(book_path, rating_path):
-    
-    #reads the CSV file data and saves it as a DataFrame
-    rating_data = pd.read_csv(rating_path, delimiter=',')
-    book_data = pd.read_csv(book_path, delimiter=',')
-    
-    #copy dataframe book_data, and delete some feature.
-    book_copy = book_data.copy()
-    book_copy = book_copy.drop(columns=['best_book_id','work_id','books_count','isbn',
-           'isbn13','title','language_code','average_rating',
-           'ratings_count', 'work_ratings_count', 'work_text_reviews_count',
-           'ratings_1', 'ratings_2', 'ratings_3', 'ratings_4', 'ratings_5',
-           'small_image_url'], axis=1)
-    book_copy.head(3)
-    
-    #fill null values in book_data
-    print("Missing values before fillna: ", book_copy.isnull().sum())
-    book_copy['original_publication_year'] = book_copy['original_publication_year'].fillna(0)
-    book_copy['original_title'] = book_copy['original_title'].fillna(book_data['title'])
-    print("Missing values after fillna: ", book_copy.isnull().sum())
-    
-    #changes the data type original_publication_year column to int data type
-    book_copy.loc[:, 'original_publication_year'] = book_copy['original_publication_year'].astype(int)
-    book_copy.dtypes
-    
-    ## b. drop duplicated rows
-    print("Books shape before drop dup: ", book_copy.shape)
-    print("Ratings shape before drop dup: ", rating_data.shape)
-    book_copy.drop_duplicates(subset = ['book_id', 'goodreads_book_id'], inplace = True)
-    rating_data.drop_duplicates(subset=['user_id','book_id'], inplace = True)
-    print("Books shape after drop dup: ", book_copy.shape)
-    print("Ratings shape after drop dup: ", rating_data.shape)
-    
-    return book_copy, rating_data
+app = Flask(__name__)
 
+
+# Your get_unrated_book_ids, predict_and_sort_ratings, and get_top_predicted_books functions here
+#make function
 def get_unrated_book_ids(rating_data, user_id):
     """
     Gets a list of book IDs that a user has not rated yet.
@@ -64,6 +40,7 @@ def get_unrated_book_ids(rating_data, user_id):
     
     return unrated_book_ids
 
+#make function
 def predict_and_sort_ratings(model, user_id, unrated_book_ids):
     """
     Predicts and sorts unrated books based on predicted ratings for a given user.
@@ -146,18 +123,47 @@ def get_top_predicted_books(model, k, user_id, rating_data, book_data):
 
     return top_predicted_books
 
-# ----------------------------------------------------------------------------
-#load data from path
-rating_path = 'data/ratings.csv'
-book_path = 'data/books.csv'
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-book_copy, rating_data = load_data(book_path, rating_path)
-new_book_data = book_copy
-model_best = pickle.load(open('output/model_best.pkl', 'rb'))
+@app.route('/top_book')
+def top_ui():
+    return render_template('top_book.html',
+                            book_name = list(popular_df['original_title'].values),
+                            authors = list(popular_df['authors'].values),
+                            image = list(popular_df['image_url'].values),
+                            votes = list(popular_df['rating_count'].values),
+                            rating = list(popular_df['mean_rating'].values),
+                            year = list(popular_df['original_publication_year'].values)
+                          )
+
+@app.route('/recommend_book')
+def recommend_ui():
+    return render_template('recommendation.html')
+
+@app.route('/recommendation',  methods=['post'])
+def recommend():
+    try:
+        user_id = int(request.form['user_id'])
+    except ValueError:
+        return render_template('recommendation.html', user_id=None, recommended_books=None)
 
 
-# Example usage
-predicted_books = get_top_predicted_books(model_best, 9, 2, rating_data, new_book_data)
-print(predicted_books)
+    # Process uploaded files (rating_data and book_data)
+    # Load book_data DataFrame
+    with open('books.pkl', 'rb') as file:
+        book_copy = pickle.load(file)
 
-pickle.dump(predicted_books,open('predicted_books.pkl','wb'))
+    # Load book_data DataFrame
+    with open('rating.pkl', 'rb') as file:
+        rating_data = pickle.load(file)    
+
+    # Get top predicted books for the user
+    recommended_books = get_top_predicted_books(model_best, 5, user_id, rating_data, book_copy)
+
+    return render_template('recommendation.html', user_id=user_id, recommended_books=recommended_books)
+    
+    
+if __name__ == '__main__':
+    app.run(debug=True, port=5001)

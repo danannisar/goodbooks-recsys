@@ -1,3 +1,5 @@
+# For retrain model in full data
+
 import pickle
 import numpy as np
 import pandas as pd
@@ -152,12 +154,6 @@ rating_path = 'data/ratings.csv'
 book_path = 'data/books.csv'
 
 book_copy, rating_data = load_data(book_path, rating_path)
-new_book_data = book_copy
+pickle.dump(book_data_small,open('books.pkl','wb'))
 model_best = pickle.load(open('output/model_best.pkl', 'rb'))
 
-
-# Example usage
-predicted_books = get_top_predicted_books(model_best, 9, 2, rating_data, new_book_data)
-print(predicted_books)
-
-pickle.dump(predicted_books,open('predicted_books.pkl','wb'))
