@@ -208,5 +208,5 @@ test_rmse = accuracy.rmse(test_pred)
 print("Test RMSE best model: ", str(test_rmse))
 
 
-pickle.dump(model_refit, open('model/best_model.pkl','wb'))
-print("Best model has been saved."
+pickle.dump(model_best, open('model/best_model.pkl','wb'))
+print("Best model has been saved.")
