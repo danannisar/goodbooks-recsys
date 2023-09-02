@@ -11034,6 +11034,33 @@ footer.footer .social-link:hover {
   }
 }
 
+.masthead2 {
+  min-height: 30rem;
+  position: relative;
+  display: table;
+  width: 100%;
+  height: auto;
+  padding-top: 8rem;
+  padding-bottom: 8rem;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%), url("../assets/img/bg.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.masthead2 h1, .masthead2 .h1 {
+  font-size: 4rem;
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 992px) {
+  .masthead2 {
+    height: 100vh;
+  }
+  .masthead2 h1, .masthead2 .h1 {
+    font-size: 5.5rem;
+  }
+}
+
 .portfolio-item {
   display: block;
   position: relative;

@@ -8,13 +8,12 @@ model_best = pickle.load(open('output/model_best.pkl','rb'))
 book_copy = pickle.load(open('output/books.pkl','rb'))
 rating_data = pickle.load(open('output/rating.pkl','rb'))
 books_with_genres = pickle.load(open('output/books_with_genres.pkl','rb'))
-predicted_books = pickle.load(open('predicted_books.pkl','rb'))
+
 
 app = Flask(__name__)
 
 
-# Your get_unrated_book_ids, predict_and_sort_ratings, and get_top_predicted_books functions here
-#make function
+# get_unrated_book_ids, predict_and_sort_ratings, and get_top_predicted_books functions
 def get_unrated_book_ids(rating_data, user_id):
     """
     Gets a list of book IDs that a user has not rated yet.
@@ -37,10 +36,9 @@ def get_unrated_book_ids(rating_data, user_id):
     rated_book_ids = set(rating_data.loc[rating_data['user_id'] == user_id, 'book_id'])
     #find unrated book_id
     unrated_book_ids = unique_book_ids.difference(rated_book_ids)
-    
+
     return unrated_book_ids
 
-#make function
 def predict_and_sort_ratings(model, user_id, unrated_book_ids):
     """
     Predicts and sorts unrated books based on predicted ratings for a given user.
@@ -67,7 +65,6 @@ def predict_and_sort_ratings(model, user_id, unrated_book_ids):
         'book_id': [],
         'predicted_rating': []
     }
-    
     #loop all unrated book
     for book_id in unrated_book_ids:
         #make predict
@@ -76,11 +73,9 @@ def predict_and_sort_ratings(model, user_id, unrated_book_ids):
         #append
         predicted_unrated_book['book_id'].append(book_id)
         predicted_unrated_book['predicted_rating'].append(pred_id.est)
-
     #create df
     predicted_unrated_book_df = pd.DataFrame(predicted_unrated_book).sort_values('predicted_rating',
                                                                                   ascending=False)
-
     return predicted_unrated_book_df
 
 def get_top_predicted_books(model, k, user_id, rating_data, book_data):
@@ -108,13 +103,10 @@ def get_top_predicted_books(model, k, user_id, rating_data, book_data):
 
     # Get unrated book IDs for the user
     unrated_book_ids = get_unrated_book_ids(rating_data, user_id)
-
     # Predict and sort unrated books
     predicted_books_df = predict_and_sort_ratings(model, user_id, unrated_book_ids)
-
     # Get the top k predicted books
     top_predicted_books = predicted_books_df.head(k).copy()
-
     # Add book details to the top predicted books
     top_predicted_books['authors'] = book_data.loc[top_predicted_books['book_id'], 'authors'].values
     top_predicted_books['original_publication_year'] = book_data.loc[top_predicted_books['book_id'], 'original_publication_year'].values
@@ -138,32 +130,54 @@ def top_ui():
                             year = list(popular_df['original_publication_year'].values)
                           )
 
+@app.route('/filter_book')
+def filter_ui():
+    genres = ["Art", "Biography", "Business", "Children", "Christian", "Classics", "Comics",  
+          "Contemporary", "Cookbooks", "Crime", "Ebooks", "Fantasy", "Fiction", "History", 
+          "Horror", "Manga", "Memoir", "Music", "Mystery", "Nonfiction", "Paranormal", "Philosophy",
+          "Poetry", "Psychology", "Religion", "Romance", "Science", "Science Fiction",   
+          "Spirituality", "Sports", "Suspense", "Thriller", "Travel"]
+    return render_template('filter.html', genres=genres)
+
+@app.route('/filtered-books', methods=['POST'])
+def filtered_books():
+    genres = ["Art", "Biography", "Business", "Children", "Christian", "Classics", "Comics",  
+          "Contemporary", "Cookbooks", "Crime", "Ebooks", "Fantasy", "Fiction", "History", 
+          "Horror", "Manga", "Memoir", "Music", "Mystery", "Nonfiction", "Paranormal", "Philosophy",
+          "Poetry", "Psychology", "Religion", "Romance", "Science", "Science Fiction",   
+          "Spirituality", "Sports", "Suspense", "Thriller", "Travel"]
+
+    selected_genre = request.form.get('genre') 
+
+
+    # filter book by genre
+    if selected_genre == 'all':
+        filtered_books = books_with_genres
+    else:
+        filtered_books = books_with_genres[books_with_genres['genres'].apply(lambda x: selected_genre.lower() in x)]
+
+    return render_template('filtered_books.html', genres=genres, books=filtered_books, selected_genre=selected_genre)
+
+
 @app.route('/recommend_book')
 def recommend_ui():
     return render_template('recommendation.html')
 
-@app.route('/recommendation',  methods=['post'])
+@app.route('/recommendation', methods=['POST'])
 def recommend():
     try:
         user_id = int(request.form['user_id'])
+        
+        # Check if the user ID is non-positive (negative or zero)
+        if user_id <= 0:
+            return render_template('recommendation.html', user_id=None, recommended_books=None)
+
+        # Get top predicted books for the user
+        recommended_books = get_top_predicted_books(model_best, 9, user_id, rating_data, book_copy)
+
+        return render_template('recommendation.html', user_id=user_id, recommended_books=recommended_books)
     except ValueError:
         return render_template('recommendation.html', user_id=None, recommended_books=None)
-
-
-    # Process uploaded files (rating_data and book_data)
-    # Load book_data DataFrame
-    with open('books.pkl', 'rb') as file:
-        book_copy = pickle.load(file)
-
-    # Load book_data DataFrame
-    with open('rating.pkl', 'rb') as file:
-        rating_data = pickle.load(file)    
-
-    # Get top predicted books for the user
-    recommended_books = get_top_predicted_books(model_best, 5, user_id, rating_data, book_copy)
-
-    return render_template('recommendation.html', user_id=user_id, recommended_books=recommended_books)
-    
     
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

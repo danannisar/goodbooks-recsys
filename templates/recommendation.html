@@ -25,20 +25,19 @@
         <nav id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">Book RecSys</a></li>
-                <li class="sidebar-nav-item"><a href="/top_book">Home</a></li>
+                <li class="sidebar-nav-item"><a href="/">Home</a></li>
                 <li class="sidebar-nav-item"><a href="/top_book">Top 30 Books</a></li>
+                <li class="sidebar-nav-item"><a href="/filter_book">Filter Book By Genre</a></li>
                 <li class="sidebar-nav-item"><a href="/recommend_book">Recommender</a></li>
             </ul>
         </nav>
-        <!-- Header-->
         
         <!-- Call to Action-->
-        <section class="content-section bg-warning text-white" id="recommender">
+        <section class="content-section masthead2 text-white" id="recommender">
             <div class="container px-4 px-lg-5 text-center">
-                <h1 class="mb-4 fw-bold" style="color: black;">Recommender Books</h1>
+                <h1 class="mb-4 fw-bold" style="color: black;">Recommender Books</h1><br>
                 <p class="fs-4"></p>
-                <p class="fs-4" style="color: black;">Welcome to the world of reading! 📚 Want to discover books that match your interests? Enter your User ID below and enjoy personalized book recommendations just for you! </p>
-                <!-- <a class="btn btn-xl btn-dark" href="#!">Look at Me!</a> -->
+                <h3 class="mb-5" style="color: black;"><em>Welcome to the world of reading! 📚 Want to discover books that match your interests? Enter your User ID below and enjoy personalized book recommendations just for you! </h3></em>
             </div>
             <br><br><br>
             <div class="container px-lg-5">
@@ -56,7 +55,7 @@
                 
                 {% if recommended_books is defined %}
                     {% if recommended_books is not none %}
-                        <h2>Top Predicted Books for User {{ user_id }}</h2>
+                        <h2>Top Predicted Books for User {{ user_id }}</h2><br><br>
                         <div class="row gx-lg-5">
                             {% for index, row in recommended_books.iterrows() %}
                                 <div class="col-lg-6 col-xxl-4 mb-5">
@@ -67,7 +66,7 @@
                                             <br><br>
                                             <h3>{{ row['original_title'] }}</h3>
                                             <h5>{{ row['authors'] }}</h5>
-                                            <p class="mb-0">Tahun [{{ row['original_publication_year'] }}]</p>
+                                            <p class="mb-0">Publication [{{ row['original_publication_year']}}]</p>
                                         </div>
                                     </div>
                                 </div>
@@ -75,7 +74,7 @@
                         </div>
                     {% else %}
                         <br><br>
-                        <p>No recommendations available for User {{ user_id }}</p>
+                        <h2>No recommendations available for User {{ user_id }}</h2>
                     {% endif %}
                 {% endif %}
                 </div>

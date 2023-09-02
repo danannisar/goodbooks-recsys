@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Book RecSys</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='assets/read-book.svg') }}" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Simple line icons-->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css" rel="stylesheet" />
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{{ url_for('static', filename = 'css/style.css') }}" rel="stylesheet" />
+        <link href="{{ url_for('static', filename = 'css/styling.css') }}" rel="stylesheet" />
+        
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <a class="menu-toggle rounded" href="#"><i class="fas fa-bars"></i></a>
+        <nav id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">Book RecSys</a></li>
+                <li class="sidebar-nav-item"><a href="/">Home</a></li>
+                <li class="sidebar-nav-item"><a href="/top_book">Top 30 Books</a></li>
+                <li class="sidebar-nav-item"><a href="/filter_book">Filter Book By Genre</a></li>
+                <li class="sidebar-nav-item"><a href="/recommend_book">Recommender</a></li>
+            </ul>
+        </nav>
+        <!-- Header-->
+        <header class="masthead2  align-items-center">
+            <div class="container px-4 px-lg-5 text-center">
+                <h1 class="mb-4 fw-bold" style="color: black;">Filter Books By Genre</h1><br><br>
+                <h3 class="mb-5"><em>Simplify your book search with our 'Filter by Genre'! Browse books by your favorite genres and embark on new literary adventures. </em></h3>
+                <br>
+                <div class="container mt-5">
+                    <form action="/filtered-books" method="post" class="row align-items-center">
+                        <label for="genre" class="form-label" style="font-size: 22px; text-align: left; color: black;">Select Genre:</label>
+                        <div class="col-md-10"> 
+
+                            <select name="genre" id="genre" class="form-control">
+                                <option value="all">All Genres</option>
+                                {% for genre in genres %}
+                                <option value="{{ genre }}">{{ genre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-lg btn-success">Apply Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+
+        <section class="content-section" id="topbook">
+            <div class="container px-4 px-lg-5">
+                <h1>Filter Books by {{ selected_genre }} Genre </h1> <br><br>
+                <div class="row gx-lg-5">
+                    {% for index, book in books.iterrows() %}
+                    <div class="col-lg-6 col-xxl-4 mb-5">
+                        <div class="card bg-light border-0 h-100">
+                            <div class="card-body text-center text-bg-light p-4 p-lg-5 pt-0 pt-lg-0">
+                                <br><br>
+                                <img class="card-img-top" src="{{ book['image_url'] }}">
+                                <br><br>
+                                <h3>{{ book['original_title'] }}</h3>
+                                <h5>{{ book['authors'] }}</h5>
+                                <p class="mb-0">Publication [{{ book['original_publication_year']}}]</p>
+                                <p class="mb-0">
+                                    Genre : 
+                                    {% for genre in book['genres'] %}
+                                        {{ genre }}
+                                        {% if not loop.last %}, {% endif %}
+                                    {% endfor %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>                
+            </div>
+        </section>
+        
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{{ url_for('static', filename = 'js/script.js') }}"></script>
+        <script src="{{ url_for('static', filename = 'js/scrip.js') }}"></script>
+        
+    </body>
+</html>
