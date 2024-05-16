@@ -31,7 +31,7 @@ From this, solutions that may need to be implemented are:
 The book recommendations are implemented through these interfaces:
 ![Front Page](./images/front-page.png)
 
-![Non-Personalized Recommendation System: Top 30](./images/top-30-1.png) ![Top 30 Books Recommendation](./images/top-30-2.png)
+|![Non-Personalized Recommendation System: Top 30](./images/top-30-1.png)|![Top 30 Books Recommendation](./images/top-30-2.png)
 
 ![Non-Personalized Recommendation System: Top 30 and Filter Genre](./images/filter-genre.png) ![Manga Genre in Top 30 Books](./images/filter-genre-2.png)
 
