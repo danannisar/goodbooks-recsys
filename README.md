@@ -18,12 +18,9 @@ The following is the user journey readers expected to face while using Goodreads
 
 There are two methods used to give book recommendations to readers, the first one is the non-personalized method which is Top K popular Books and Filtering by Genre. The number of ratings given by users to each book is calculated and then sorted to get the most popular books. As additional information, virtual library names are extracted to obtain book genres. The other method is a Personalized one using user-item interaction data (collaborative filtering). For Personalized recommendation, 5-fold cross-validation is carried out on 5 types of algorithms to get the model with the best performance:
 
-![RMSE of cross-validation 5 different algorithms](./images/best-model.png#center)
-
-img[src*='#center'] { 
-    display: block;
-    margin: auto;
-}
+<p align="center">
+  <img src="https://raw.githubusercontent.com/danannisar/goodbooks-recsys/master/images/best-model.png" width="70%"/>
+</p>
 
 KNN Baseline has the smallest RMSE value with hyperparameters `k = 25` (refers to the number of nearest neighbors considered by the model, the number of neighbors influences the model in understanding user preferences), `pearson_baseline` (calculation of similarity between items and users) and `min_k = 2` ( minimum nearest neighbor value required to make a prediction. This difference could be a signal that the K-Nearest Neighbors (KNN) model has the potential to be overfitting. Overfitting occurs when a model overfits the training data so that its performance suffers. The difference between the RMSE value when doing cross-validation on the training data (0.856) and the RMSE on the test data (0.858) looks small.
 
@@ -42,5 +39,5 @@ The book recommendations are implemented through these interfaces:
 |![Non-Personalized Recommendation System: Top 30 and Filter Genre](./images/filter-genre.png)|![Manga Genre in Top 30 Books](./images/filter-genre-2.png)|
 |:-:|:-:|
 
-|![Personalized Recommendation System: User-Item Collaborative Filtering](./images/personalized.png)|![Books Recommendation for User 111](./images/personalized-2.png) ![](./images/personalized-3.png)|
+|<img src="https://raw.githubusercontent.com/danannisar/goodbooks-recsys/master/images/personalized.png" width="800" >|<img src="https://raw.githubusercontent.com/danannisar/goodbooks-recsys/master/images/personalized-2.png" width="400" > <img src="https://raw.githubusercontent.com/danannisar/goodbooks-recsys/master/images/personalized-3.png" width="400" >|
 |:-:|:-:|
