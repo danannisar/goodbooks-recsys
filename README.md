@@ -16,12 +16,11 @@ The following is the user journey readers expected to face while using Goodreads
 
 ![User Journey in Goodreads](./images/user-journey.png)
 
-
 There are two methods used to give book recommendations to readers, the first one is the non-personalized method which is Top K popular Books and Filtering by Genre. The number of ratings given by users to each book is calculated and then sorted to get the most popular books. As additional information, virtual library names are extracted to obtain book genres. The other method is a Personalized one using user-item interaction data (collaborative filtering). For Personalized recommendation, 5-fold cross-validation is carried out on 5 types of algorithms to get the model with the best performance:
 
 <div align="center">
-	<img width = "50%" src="https://raw.githubusercontent.com/danannisar/goodbooks-recsys/master/images/best-model.png">\
-	RMSE of cross-validation 5 different algorithms
+	<img width = "70%" src="https://raw.githubusercontent.com/danannisar/goodbooks-recsys/master/images/best-model.png">
+	<figcaption>RMSE of cross-validation 5 different algorithms</figcaption>
 </div>
 
 KNN Baseline has the smallest RMSE value with hyperparameters `k = 25` (refers to the number of nearest neighbors considered by the model, the number of neighbors influences the model in understanding user preferences), `pearson_baseline` (calculation of similarity between items and users) and `min_k = 2` ( minimum nearest neighbor value required to make a prediction. This difference could be a signal that the K-Nearest Neighbors (KNN) model has the potential to be overfitting. Overfitting occurs when a model overfits the training data so that its performance suffers. The difference between the RMSE value when doing cross-validation on the training data (0.856) and the RMSE on the test data (0.858) looks small.
