@@ -15,6 +15,9 @@ Book rating and metadata data will be used in modeling, while book tag data will
 The following is the user journey readers expected to face while using Goodreads after the recommendation feature was implemented:
 
 ![User Journey in Goodreads](./images/user-journey.png)
+<div align="center">
+	<img width = "50%" src="https://i.imgur.com/8BgVXcY.png\">\
+</div>
 
 There are two methods used to give book recommendations to readers, the first one is the non-personalized method which is Top K popular Books and Filtering by Genre. The number of ratings given by users to each book is calculated and then sorted to get the most popular books. As additional information, virtual library names are extracted to obtain book genres. The other method is a Personalized one using user-item interaction data (collaborative filtering). For Personalized recommendation, 5-fold cross-validation is carried out on 5 types of algorithms to get the model with the best performance:
 
@@ -35,6 +38,7 @@ The book recommendations are implemented through these interfaces:
 |:-:|:-:|
 
 |![Non-Personalized Recommendation System: Top 30 and Filter Genre](./images/filter-genre.png)|![Manga Genre in Top 30 Books](./images/filter-genre-2.png)|
+|:-:|:-:|
 
 |![Personalized Recommendation System: User-Item Collaborative Filtering](./images/personalized.png)|![Books Recommendation for User 111](./images/personalized-2.png) ![](./images/personalized-3.png)|
-
+|:-:|:-:|
