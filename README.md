@@ -34,7 +34,7 @@ The book recommendations are implemented through these interfaces:
 |![Non-Personalized Recommendation System: Top 30](./images/top-30-1.png)|![Top 30 Books Recommendation](./images/top-30-2.png)|
 |:-:|:-:|
 
-![Non-Personalized Recommendation System: Top 30 and Filter Genre](./images/filter-genre.png) ![Manga Genre in Top 30 Books](./images/filter-genre-2.png)
+|![Non-Personalized Recommendation System: Top 30 and Filter Genre](./images/filter-genre.png)|![Manga Genre in Top 30 Books](./images/filter-genre-2.png)|
 
-![Personalized Recommendation System: User-Item Collaborative Filtering](./images/personalized.png) ![Books Recommendation for User 111](./images/personalized-2.png) ![](./images/personalized-3.png)
+|![Personalized Recommendation System: User-Item Collaborative Filtering](./images/personalized.png)|![Books Recommendation for User 111](./images/personalized-2.png) ![](./images/personalized-3.png)|
 
